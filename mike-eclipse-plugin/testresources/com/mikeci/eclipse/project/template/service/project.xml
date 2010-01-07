@@ -1,0 +1,39 @@
+<project>
+	<srcDir>
+		<template>
+			<name>HomeController.java</name>
+			<inPackage>true</inPackage>t>
+		</template>
+	</srcDir>
+	<testDir>
+		<template>
+			<name>AppTest.java</name>
+			<inPackage>true</inPackage>
+		</template>
+	</testDir>
+	<webContentDir />
+	<webInfDir>
+		<template>
+			<name>applicationContext.xml</name>
+			<inPackage>false</inPackage>
+		</template>
+		<template>
+			<name>web.xml</name>
+			<inPackage>false</inPackage>
+		</template>
+		<template>
+			<name>${projectName}-servlet.xml</name>
+			<inPackage>false</inPackage>
+		</template>
+	</webInfDir>
+	<webInfLibDir>
+		<bin>
+			<name>spring-beans-2.5.6.jar</name>
+			<inPackage>false</inPackage>
+		</bin>
+		<bin>
+			<name>spring-core-2.5.6.jar</name>
+			<inPackage>false</inPackage>
+		</bin>
+	</webInfLibDir>
+</project>

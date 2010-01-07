@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+  <description url="@UPDATE_SITE_URL@">
+      Update site for mikeclipse
+   </description>
+   <feature url="features/com.mikeci.eclipse.feature_0.1.0.jar" id="com.mikeci.eclipse.feature" version="0.1.0">
+      <category name="mikeclipse"/>
+   </feature>
+   <category-def name="mikeclipse" label="Mike Eclipse Integration">
+	 <description>
+         The mikeclipse plug-in for Eclipse 3.4 and higher.
+      </description>
+   </category-def>   
+</site>

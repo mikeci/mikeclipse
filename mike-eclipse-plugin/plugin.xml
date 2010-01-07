@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+	<extension point="org.eclipse.wst.common.project.facet.core.presets">
+	  <static-preset id="mike.examples.springmvc.preset">
+	      <label>Mike Spring MVC Web Project</label>
+	      <description>Creates an example Spring MVC web project suitable for Mike, including example code, configuration, unit tests and a Mike-compatible Ant build file.</description>
+	      <facet id="jst.java" version="5.0"/>
+	      <facet id="jst.web" version="2.5"/>
+	      <facet id="mike.examples.springmvc" version="1.0"/>
+      </static-preset>
+      <static-preset id="mike.examples.struts2.preset">
+	      <label>Mike Struts2 Web Project</label>
+	      <description>Creates an example Struts2 web project suitable for Mike, including example code, configuration, unit tests and a Mike-compatible Ant build file.</description>
+	      <facet id="jst.java" version="5.0"/>
+	      <facet id="jst.web" version="2.5"/>
+	      <facet id="mike.examples.struts2" version="1.0"/>
+      </static-preset>
+	</extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.core.facets">
+  
+	<project-facet id="mike.examples.springmvc">
+		<label>Mike Spring MVC Web Project</label>
+		<description>
+			Extends your project to include Spring MVC libraries, example code, configuration, unit tests and a Mike-compatible Ant build file.
+		</description>
+	</project-facet>
+	
+    <project-facet id="mike.examples.struts2">
+		<label>Mike Struts2 Web Project</label>
+		<description>
+			Extends your project to include Struts2 libraries, example code, configuration, unit tests and a Mike-compatible Ant build file.
+		</description>
+	</project-facet>
+
+    <project-facet-version facet="mike.examples.springmvc" version="1.0">
+      <constraint>
+        <and>
+            <requires facet="jst.java" version="5.0,6.0"/>
+        	<requires facet="jst.web" version="2.5"/>
+        	<conflicts facet="mike.examples.struts2" version="1.0"/>
+        </and>
+      </constraint>
+      <action type="INSTALL" id="mike.examples.springmvc.install">
+        <config-factory class="com.mikeci.eclipse.project.facet.DefaultFacetConfig$Factory"/>
+        <delegate class="com.mikeci.eclipse.project.facet.action.SpringMvcFacetAction"/>
+      </action>
+    </project-facet-version>
+  
+  <project-facet-version facet="mike.examples.struts2" version="1.0">
+      <constraint>
+        <and>
+            <requires facet="jst.java" version="5.0,6.0"/>
+        	<requires facet="jst.web" version="2.5"/>
+        	<conflicts facet="mike.examples.springmvc" version="1.0"/>
+        </and>
+      </constraint>
+      <action type="INSTALL" id="mike.examples.struts2.install">
+        <config-factory class="com.mikeci.eclipse.project.facet.DefaultFacetConfig$Factory"/>
+        <delegate class="com.mikeci.eclipse.project.facet.action.Struts2FacetAction"/>
+      </action>
+    </project-facet-version>
+  </extension>
+  
+  <extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+    <supported>
+      <runtime-component id="org.eclipse.jst.server.tomcat" version="6.0"/>
+      <facet id="mike.examples.springmvc"/>
+      <facet id="mike.examples.struts2"/>
+    </supported>
+  </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.ui.images">
+    <image facet="mike.examples.springmvc" path="icons/mike-default.gif"/>
+    <image facet="mike.examples.struts2" path="icons/mike-default.gif"/>
+  </extension>
+
+  <extension point="org.eclipse.wst.common.project.facet.ui.wizardPages">
+    <wizard-pages action="mike.examples.springmvc.install">
+      <page class="com.mikeci.eclipse.project.facet.wizard.DefaultFacetWizardPage"/>
+    </wizard-pages>
+    <wizard-pages action="mike.examples.struts2.install">
+      <page class="com.mikeci.eclipse.project.facet.wizard.DefaultFacetWizardPage"/>
+    </wizard-pages>
+  </extension>
+
+</plugin>

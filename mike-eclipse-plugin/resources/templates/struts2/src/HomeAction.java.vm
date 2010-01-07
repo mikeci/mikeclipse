@@ -1,0 +1,13 @@
+${packageStatement}
+
+import com.opensymphony.xwork2.ActionSupport;
+
+@SuppressWarnings("serial")
+public class HomeAction extends ActionSupport {
+
+
+	public String execute() throws Exception {
+		return SUCCESS;
+	}
+
+}

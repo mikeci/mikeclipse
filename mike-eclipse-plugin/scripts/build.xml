@@ -1,0 +1,126 @@
+<project name="com.mikeci.wst.project.facet" default="all">
+	
+	<property name="plugin.project.dir" value=".."/>
+	<property name="plugin.project.name" value="com.mikeci.wst.project.facet"/>
+	<property name="plugin.build.dir" value="${plugin.project.dir}/target"/>
+	<property name="plugin.version" value="0.1.0"/>
+	<property name="src.dir" value="${plugin.project.dir}/src"/>
+	<property name="test.src.dir" value="${plugin.project.dir}/test"/>
+	<property name="resource.dir" value="${plugin.project.dir}/resources"/>
+	<property name="test.resource.dir" value="${plugin.project.dir}/testresources"/>
+	<property name="classes.dir" value="${plugin.build.dir}/classes"/>
+	<property name="test.classes.dir" value="${plugin.build.dir}/testclasses"/>
+	<property name="lib.dir" value="${plugin.project.dir}/lib"/>
+	<property name="test.lib.dir" value="${plugin.project.dir}/testlib"/>
+	<property name="test.reports.dir" value="${plugin.build.dir}/reports/junit"/>
+	
+	
+	
+	<!-- ================================= 
+          target: init              
+         ================================= -->
+    <target name="init" description="initialses the build">
+		<echo message="**********************************************" />
+		<echo message="* Building ${plugin.project.name}" />
+		<echo message="**********************************************" />
+    	
+    	<path id="compile.classpath">
+			<fileset dir="${eclipse.home}">
+				<include name="plugins/org.eclipse.*.jar"/>
+			</fileset>
+			<fileset dir="${lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+    	</path>	
+    	
+    	<path id="testcompile.classpath">
+    		<path refid="compile.classpath"/>
+			<fileset dir="${test.lib.dir}">
+				<include name="*.jar"/>
+			</fileset>
+			<pathelement location="${classes.dir}"/>
+    	</path>	
+    	
+    	<path id="test.classpath">
+    		<path refid="testcompile.classpath"/>
+			<pathelement location="${test.classes.dir}"/>
+    	</path>	
+    	
+    </target>
+	
+	<target name="clean" depends="init">
+		<delete dir="${plugin.build.dir}"/>
+	</target>
+	
+	<target name="prepare" depends="init">
+		<mkdir dir="${plugin.build.dir}"/>
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${test.classes.dir}"/>
+		<mkdir dir="${test.reports.dir}"/>
+	</target>
+	
+	<target name="process-resources" depends="prepare">
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.xml"/>
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="process-test-resources" depends="process-resources">
+		<copy todir="${test.classes.dir}">
+			<fileset dir="${test.resource.dir}">
+				<include name="**/*.*"/>
+			</fileset>
+		</copy>
+	</target>
+
+	
+	<target name="compile" depends="process-test-resources">
+		<javac destdir="${classes.dir}" 
+			failonerror="true" verbose="false" 
+			debug="on" 
+			srcdir="${src.dir}">
+			<classpath refid="compile.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="compile-tests" depends="compile">
+		<javac destdir="${plugin.build.dir}/testclasses" 
+			failonerror="true" verbose="false" 
+			debug="on" 
+			srcdir="${plugin.project.dir}/test">
+			<classpath refid="testcompile.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="test" depends="compile-tests">
+    	<junit haltonfailure="true" printsummary="true">
+			<formatter type="xml" />
+			<classpath refid="test.classpath"/>
+			<batchtest fork="yes" todir="${test.reports.dir}">
+				<fileset dir="${test.src.dir}" 
+					includes="**/*Test.java"/>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<target name="package" depends="test">
+		<jar destfile="${plugin.build.dir}/${plugin.project.name}_${plugin.version}.jar" manifest="${plugin.project.dir}/META-INF/MANIFEST.MF">
+			<fileset dir="${classes.dir}"/>
+			<fileset dir="${plugin.project.dir}">
+				<include name="resources/**/*.*"/>
+				<include name="icons/*.gif"/>
+				<include name="lib/*.jar"/>
+				<include name="plugin.*"/>
+				<include name="about.*"/>
+				<include name="LICENSE"/>
+			</fileset>	
+		</jar>
+	</target>
+	
+	<target name="all" depends="clean,package"/>
+	
+
+</project>

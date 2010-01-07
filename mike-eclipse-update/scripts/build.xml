@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     25 Sep 2009 14:49:19                                                        
+
+     project 
+     description Eclipse update site build file   
+                   
+     Adam Leggett                                                               
+     ====================================================================== -->
+<project name="com.mikeci.eclipse.update" default="dist">
+	
+	<!-- ================================= 
+          target: init              
+         ================================= -->
+    <target name="init" description="initialses the build">
+    	<property file="build-update-site.properties" />
+		<echo message="**********************************************" />
+		<echo message="* Building ${ant.project.name}" />
+		<echo message="**********************************************" />
+    </target>
+
+
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+	<target name="clean"  depends="init" description="Cleans the build output dirs">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<ant antfile="${facet.plugin.dir}/scripts/build.xml" target="clean" inheritall="false">
+			<property name="plugin.project.dir" value="${facet.plugin.dir}"/>
+			<property name="eclipse.home" value="${eclipse.home}"/>
+		</ant>	
+	</target>
+
+	<!-- ================================= 
+          target: prepare             
+         ================================= -->
+	<target name="prepare" depends="init" description="Creates the build output dirs">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${build.dir}/features" />
+		<mkdir dir="${build.dir}/plugins" />
+		<mkdir dir="${build.dir}/staging" />
+	</target>
+
+	<!-- ================================= 
+          target: prepare             
+         ================================= -->
+	<target name="build-modules" depends="prepare" description="Creates plugins and feature jars">
+		<ant antfile="${facet.plugin.dir}/scripts/build.xml" 
+			target="package" 
+			inheritall="false">
+			<property name="plugin.project.dir" value="${facet.plugin.dir}"/>
+			<property name="eclipse.home" value="${eclipse.home}"/>
+		</ant>	
+	</target>
+
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="stage" depends="build-modules" description="Creates the update site structure">
+		<copy file="${facet.plugin.archive}" todir="${build.dir}/plugins" />
+		<copy file="${feature.dir}/feature.xml" todir="${build.dir}/staging">
+		    <filterset>
+		      <filter token="UPDATE_SITE_URL" value="${update.site.url}"/>
+		    </filterset>
+		</copy>
+		<jar destfile="${build.dir}/features/${feature.archive.name}">
+			<fileset dir="${build.dir}/staging">
+				<include name="feature.xml" />
+			</fileset>
+			<fileset dir="${feature.dir}">
+				<include name="license.html" />
+				<include name="licenses/*.txt" />
+			</fileset>
+		</jar>
+		<copy file="${project.dir}/site.xml" todir="${build.dir}">
+		    <filterset>
+		      <filter token="UPDATE_SITE_URL" value="${update.site.url}"/>
+		    </filterset>
+		</copy>
+		<delete dir="${build.dir}/staging"/>
+	</target>
+
+	<!-- ================================= 
+          target: dist             
+         ================================= -->
+	<target name="dist" depends="stage" description="Creates a tarball of the site">
+		<mkdir dir="${dist.dir}" />
+		<zip destfile="${dist.dir}/${ant.project.name}_${version}.zip">
+			<fileset dir="${build.dir}" />
+		</zip>
+	</target>
+
+
+</project>

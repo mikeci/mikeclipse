@@ -1,0 +1,35 @@
+# Ant build properties for ${projectName} web application
+
+# project directory structures
+project.dir=${basedir}
+project.src.dir=${project.dir}/${srcDir}
+project.testsrc.dir=${project.dir}/${testSrcDir}
+project.webapp.dir=${project.dir}/${webContentDir}
+project.lib.dir=${basedir}/lib
+project.packaging=war
+project.build.dir=${project.dir}/target
+project.build.classes.dir=${project.build.dir}/classes
+project.build.testclasses.dir=${project.build.dir}/test-classes
+project.reports.dir=${project.build.dir}/reports
+project.reports.junit.dir=${project.reports.dir}/junit
+project.reports.javadoc.dir=${project.reports.dir}/apidoc
+project.archive=${project.build.dir}/${ant.project.name}.${project.packaging}
+project.dist.dir=${project.dir}/dist
+
+# common task options
+source=1.5
+
+# javac task options
+javac.debug=on
+javac.source=${source}
+
+# junit task options
+junit.haltonfailure=false
+junit.batch.includes=**/Test*.java,**/*Test.java
+junit.batch.excludes=
+
+# javadoc task options
+javadoc.source=${source}
+
+# target execution conditions
+#test.skip=true

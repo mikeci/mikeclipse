@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ======================================================================                                                     
+
+     Project    mikeclipse-update
+     Description Parent build file for mikeclipse
+                   
+     Adam Leggett                                                                
+     ====================================================================== -->
+<project name="mikeclipse-update" default="all" >
+	
+	<property environment="env"/>
+	<property name="eclipseHome" 				value="${env.ECLIPSE_HOME}"/>
+	<property name="updateSiteProjectBaseDir" 	value="${basedir}/mike-eclipse-update"/>
+    <property name="pluginProjectBaseDir" 		value="${basedir}/mike-eclipse-plugin" />
+    <property name="featureProjectBaseDir" 		value="${basedir}/mike-eclipse-feature" />
+	<property name="buildOutputDir"				value="target"/>
+	<property name="distVersion"				value="0.1.1-SNAPSHOT"/>
+	<property name="distFile"					value="${ant.project.name}-${distVersion}-bin.zip"/>
+	
+	<!-- ================================= 
+          target: prepare              
+         ================================= -->
+    <target name="prepare" description="Prepares the build output directories">
+		<mkdir dir="${basedir}/${buildOutputDir}"/>
+    </target>
+	
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+    <target name="clean" description="Cleans the build output directories">
+        <delete dir="${updateSiteProjectBaseDir}/${buildOutputDir}"/>
+    	<delete dir="${pluginProjectBaseDir}/${buildOutputDir}"/>
+    	<delete dir="${basedir}/${buildOutputDir}"/>
+    </target>
+	
+	<!-- ================================= 
+          target: package              
+         ================================= -->
+    <target name="package" depends="prepare" description="Creates the jar files for the mikeclipse components">
+        <ant antfile="${updateSiteProjectBaseDir}/scripts/build.xml" 
+        		dir="${updateSiteProjectBaseDir}/scripts" target="stage">
+             <property name="project.dir" value="${updateSiteProjectBaseDir}" />
+             <property name="feature.dir" value="${featureProjectBaseDir}" />
+             <property name="facet.plugin.dir" value="${pluginProjectBaseDir}" />
+             <property name="eclipse.home" value="${eclipseHome}" />
+        </ant>
+    </target>
+	
+	<!-- ================================= 
+          target: dist              
+         ================================= -->
+    <target name="dist" depends="package" description="Creates the zipped mikeclipse distribution">
+		<zip destfile="${basedir}/${buildOutputDir}/${distFile}">
+        	<zipfileset dir="${updateSiteProjectBaseDir}/${buildOutputDir}">
+        		<include name="site.xml"/>
+        		<include name="**/*.jar"/>
+        	</zipfileset>
+		</zip>
+    </target>
+
+    <!-- ================================= 
+          target: all              
+         ================================= -->
+    <target name="all" depends="clean,dist" description="Executes full build lifecycle"/>
+
+
+</project>
